@@ -4,14 +4,6 @@ const mysql = require('mysql')
 const Sequelize = require('sequelize')
 const { MYSQL_CONFIG } = require('../config')
 
-const POOL = mysql.createPool({
-	host: MYSQL_CONFIG.host,
-	port: MYSQL_CONFIG.port,
-	user: MYSQL_CONFIG.user,
-	password: MYSQL_CONFIG.password,
-	database: MYSQL_CONFIG.database,
-})
-
 const sequelize = new Sequelize(MYSQL_CONFIG.database, MYSQL_CONFIG.user, MYSQL_CONFIG.password, {
 	host: MYSQL_CONFIG.host,
 	port: MYSQL_CONFIG.port,

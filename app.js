@@ -19,9 +19,8 @@ app.use(cors({
     allowHeaders: ['Content-Type', 'Authorization', 'Accept'],
 }))
 
-
 routes(app)
 
 //端口监听
 app.listen(3000)
-console.info("start success")
+console.info("start success at port 3000")
