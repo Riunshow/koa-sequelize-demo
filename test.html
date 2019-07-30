@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Document</title>
+</head>
+
+<body>
+	<div onclick="Login()">
+		登录
+	</div>
+	<div onclick="getToken()">
+		获取
+	</div>
+	<script>
+		function Login() {
+			window.location.href = 'http://localhost:3000/api/wechat/goLogin'
+		}
+
+		function getToken() {
+			console.log(getQueryString('code'))
+			window.fetch('http://localhost:3000/api/wechat/wxcallback?code=' + getQueryString('code'))
+		}
+
+		function getQueryString(name) {
+			var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+			var r = window.location.search.substr(1).match(reg);
+			if (r != null) return unescape(r[2]);
+			return null;
+		}
+	</script>
+</body>
+
+</html>

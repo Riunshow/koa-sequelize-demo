@@ -1,5 +1,5 @@
-const Wechat = require('../controller/wechat')
 const Router = require('koa-router')
+const Wechat = require('../controller/wechat')
 
 const router = new Router()
 
