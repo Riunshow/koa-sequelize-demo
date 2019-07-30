@@ -1,36 +1,34 @@
-const db = require('../db')
-const Sequelize = require('sequelize')
-const { GroupModel } = require('../models/group')
+module.exports = (sequelize, DataTypes) => {
+  const User = sequelize.define('User', {
+    id: {
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      primaryKey: true,
+    },
+    username: {
+      type: DataTypes.STRING,
+      unique: true,
+    }, // 登录名
+    name: DataTypes.STRING,
+    email: DataTypes.STRING,
+    password: DataTypes.STRING,
+    token: {
+      type: DataTypes.STRING,
+      unique: true,
+      default: '',
+    },
+    loginTime: DataTypes.STRING,
+    createdAt: DataTypes.DATE,
+    updatedAt: DataTypes.DATE,
+  })
 
-const UserModel = db.sequelize.define('user', {
-	id: {
-		type: Sequelize.INTEGER,
-		autoIncrement: true,
-		primaryKey: true,
-	},
-	username: {
-		type: Sequelize.STRING,
-		unique: true,
-	}, // 登录名
-	name: Sequelize.STRING,
-	email: Sequelize.STRING,
-	password: Sequelize.STRING,
-	token: {
-		type: Sequelize.STRING,
-		unique: true,
-		default: '',
-	},
-	loginTime: Sequelize.STRING,
-	createdAt: Sequelize.DATE,
-	updatedAt: Sequelize.DATE
-})
+  User.associate = (models) => {
+    models.User.belongsToMany(models.Group, {
+      through: 'UserGroup',
+      foreignKey: 'userId',
+      onDelete: 'cascade',
+    })
+  }
 
-UserModel.belongsToMany(GroupModel, {
-	through: 'UserGroup',
-	foreignKey: 'user_id'
-})
-
-
-module.exports = {
-	UserModel
+  return User
 }

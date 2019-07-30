@@ -1,6 +1,4 @@
 //mysql数据库连接
-
-const mysql = require('mysql')
 const Sequelize = require('sequelize')
 const { MYSQL_CONFIG } = require('../config')
 

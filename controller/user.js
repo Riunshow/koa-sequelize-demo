@@ -1,5 +1,5 @@
-const { UserModel } = require('../models/user')
-const { GroupModel } = require('../models/group')
+const UserModel = require('../models').User
+const GroupModel = require('../models').Group
 
 class User  {
 
