@@ -5,7 +5,7 @@ class User  {
 
 	async getAllUser(ctx, next) {
 		const data = await UserModel.findAll()
-		ctx.response.body  = {
+		ctx.response.body = {
 			success: true,
 			data
 		}

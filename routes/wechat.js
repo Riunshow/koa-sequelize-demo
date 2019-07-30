@@ -5,6 +5,6 @@ const router = new Router()
 
 router.get('/goLogin', Wechat.goLogin)
 
-router.get('/wxcallback', Wechat.wxCallBack)
+router.get('/wxcallback', Wechat.getAccessToken)
 
 module.exports = router
