@@ -25,10 +25,9 @@ class Wechat {
 		} = ctx.query
 		console.log(ctx.query)
 
-		const req_callback_url = `https://api.weixin.qq.com/sns/oauth2/access_token?appid=${wechat_config.APPID}&secret=${wechat_config.appsecret}&code=${code}&grant_type=authorization_code`
-
-		const res = await superagent.get(req_callback_url)
-
+		const req_url = `https://api.weixin.qq.com/sns/oauth2/access_token?appid=${wechat_config.APPID}&secret=${wechat_config.appsecret}&code=${code}&grant_type=authorization_code`
+		
+		const res = await superagent.get(req_url)
 		const result = JSON.parse(res.text)
 
 		ctx.response.body = {
@@ -41,10 +40,10 @@ class Wechat {
 	async getWechatUserInfo(ctx) {
 		const { access_token, openid } = ctx.query
 
-		const req_userinfo_url = `https://api.weixin.qq.com/sns/userinfo?access_token=${access_token}&openid=${openid}&lang=zh_CN`
+		const req_url = `https://api.weixin.qq.com/sns/userinfo?access_token=${access_token}&openid=${openid}&lang=zh_CN`
 
-		const res_user_info = await superagent.get(req_userinfo_url)
-		let info = JSON.parse(res_user_info.text)
+		const res = await superagent.get(req_url)
+		let info = JSON.parse(res.text)
 
 		ctx.response.body = {
 			success: true,
@@ -60,11 +59,13 @@ class Wechat {
 		} = ctx.query
 
 		const req_url = `https://api.weixin.qq.com/sns/auth?access_token=${access_token}&openid=${openid}`
-		const validate_data = await superagent.get(req_url)
+		
+		const res = await superagent.get(req_url)
+		let info = JSON.parse(res.text)
 
 		ctx.response.body = {
 			success: true,
-			data: validate_data
+			data: info
 		}
 	}
 
@@ -76,11 +77,13 @@ class Wechat {
 		} = ctx.query
 
 		const req_url = `https://api.weixin.qq.com/sns/oauth2/refresh_token?appid=${appid}&grant_type=refresh_token&refresh_token=${refresh_token}`
-		const access_token_data = await superagent.get(req_url)
+		
+		const res = await superagent.get(req_url)
+		let info = JSON.parse(res.text)
 
 		ctx.response.body = {
 			success: true,
-			data: access_token_data
+			data: info
 		}
 	}
 
