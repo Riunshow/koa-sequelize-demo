@@ -25,8 +25,15 @@ module.exports = (sequelize, DataTypes) => {
   User.associate = (models) => {
     models.User.belongsToMany(models.Group, {
       through: 'UserGroup',
-      foreignKey: 'userId',
+      foreignKey: 'user_id',
       onDelete: 'cascade',
+    })
+
+    models.User.hasMany(models.TestSession, {
+      foreignKey:'from_user_id'
+    })
+    models.User.hasMany(models.TestSession, {
+      foreignKey:'to_user_id'
     })
   }
 

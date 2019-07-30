@@ -1,5 +1,3 @@
-'use strict'
-
 const fs = require('fs')
 const path = require('path')
 const Sequelize = require('sequelize')
@@ -18,7 +16,7 @@ const sequelize = new Sequelize(MYSQL_CONFIG.database, MYSQL_CONFIG.user, MYSQL_
   define: {
     timestamps: true,
     underscored: true,
-    freezeTableName: true,
+    freezeTableName: true
   }
 })
 

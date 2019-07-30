@@ -23,7 +23,6 @@ class Wechat {
 		const {
 			code
 		} = ctx.query
-		console.log(ctx.query)
 
 		const req_url = `https://api.weixin.qq.com/sns/oauth2/access_token?appid=${wechat_config.APPID}&secret=${wechat_config.appsecret}&code=${code}&grant_type=authorization_code`
 		
