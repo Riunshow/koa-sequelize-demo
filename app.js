@@ -6,21 +6,21 @@ const { logger, accessLogger } = require('./config/log_config')
 
 const app = new Koa()
 
+app.use(accessLogger())
+
 app.use(async (ctx, next) => {
   try {
     await next()
   } catch (err) {
-    logger.error(err.message)
-    ctx.response.status = err.statusCode || err.status || 500
-    ctx.response.body = {
+    logger.error(err)
+    ctx.status = err.statusCode || err.status || 500
+    ctx.body = {
       success: false,
       code: -1,
       message: err.message
     }
   }
 })
-
-app.use(accessLogger())
 
 app.use(bodyParser())
 
