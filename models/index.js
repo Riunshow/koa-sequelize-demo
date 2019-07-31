@@ -2,9 +2,7 @@ const fs = require('fs')
 const path = require('path')
 const Sequelize = require('sequelize')
 const basename = path.basename(module.filename)
-const {
-  MYSQL_CONFIG
-} = require('../config')
+const { MYSQL_CONFIG } = require('../config/mysql_config')
 
 let db = {}
 
@@ -22,22 +20,34 @@ const sequelize = new Sequelize(MYSQL_CONFIG.database, MYSQL_CONFIG.user, MYSQL_
 
 fs
   .readdirSync(__dirname)
-  .filter(function (file) {
+  .filter(file => {
     return (file.indexOf('.') !== 0) && (file !== basename) && (file.slice(-3) === '.js')
   })
-  .forEach(function (file) {
+  .forEach(file => {
     const model = sequelize['import'](path.join(__dirname, file))
     db[model.name] = model
   })
 
-sequelize.sync().then(() => {
-    console.log('mysql连接成功')
-  })
-  .catch(err => {
-    console.log('mysql连接失败:', err)
-  })
 
-Object.keys(db).forEach(function (modelName) {
+try {
+  (async () => {
+    await sequelize.authenticate()
+    console.log('mysql连接成功')
+  })()
+} catch (error) {
+  console.error('mysql连接失败:', err)  
+}
+
+try {
+  (async () => {
+    await sequelize.sync()
+    console.log('mysql表生成成功')
+  })()
+} catch (error) {
+  console.error('mysql表生成失败:', err)  
+}
+
+Object.keys(db).forEach(modelName => {
   if (db[modelName].associate) {
     db[modelName].associate(db)
   }

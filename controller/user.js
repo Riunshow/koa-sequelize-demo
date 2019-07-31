@@ -1,13 +1,67 @@
-const UserModel = require('../models').User
-const GroupModel = require('../models').Group
+const _ = require('lodash')
 
-class User  {
+const WxUserModel = require('../models').WxUser
+const { logger, log } = require('../config/log_config')
 
-	async getAllUser(ctx, next) {
-		const data = await UserModel.findAll()
-		ctx.response.body = {
+
+class User {
+
+	// 绑定用户
+	async bindUser (ctx) {
+		const { openid, nickname, avatar, gender = '', city = '', province = '', country = '' } = ctx.request.body 
+
+		if (!openid || !nickname || !avatar) {
+			return ctx.throw(400)
+		}
+
+		const new_user_data = {
+			openid,
+			nickname,
+			avatar,
+			gender,
+			city,
+			province,
+			country
+		}
+		// 用户存在则更新
+		await WxUserModel.upsert(new_user_data)
+		
+		return ctx.response.body = {
 			success: true,
-			data
+			message: '更新用户成功'
+		}
+	}
+
+	// 获取单个用户
+	async getUser (ctx) {
+		const { user_id } = ctx.params
+
+		if (!user_id || !_.isFinite(parseInt(user_id))) {
+			return ctx.throw(400)
+		}
+
+		const user_find_data = await WxUserModel.findOne({
+			where: {
+				id: parseInt(user_id)
+			},
+			attributes: ['id', 'openid', 'nickname', 'avatar', 'gender', 'city', 'province', 'country', 'created_at', 'updated_at']
+		})
+
+		return ctx.response.body = {
+			success: true,
+			data: user_find_data
+		}
+	}
+
+	// 获取全部用户
+	async getAllUsers (ctx) {
+		const all_users_data = await WxUserModel.findAll({
+			attributes: ['id', 'openid', 'nickname', 'avatar', 'gender', 'city', 'province', 'country', 'created_at', 'updated_at']
+		})
+
+		return ctx.response.body = {
+			success: true,
+			data: all_users_data
 		}
 	}
 

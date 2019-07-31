@@ -1,5 +1,5 @@
 const superagent = require('superagent')
-const logger = require('log4js').getLogger('wechat')
+const logger = require('koa-log4').getLogger('wechat')
 
 const {
 	wechat_config
