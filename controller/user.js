@@ -1,8 +1,6 @@
 const _ = require('lodash')
 
 const WxUserModel = require('../models').WxUser
-const { logger, log } = require('../config/log_config')
-
 
 class User {
 
@@ -26,7 +24,7 @@ class User {
 		// 用户存在则更新
 		await WxUserModel.upsert(new_user_data)
 		
-		return ctx.response.body = {
+		ctx.body = {
 			success: true,
 			message: '更新用户成功'
 		}
@@ -47,7 +45,7 @@ class User {
 			attributes: ['id', 'openid', 'nickname', 'avatar', 'gender', 'city', 'province', 'country', 'created_at', 'updated_at']
 		})
 
-		return ctx.response.body = {
+		ctx.body = {
 			success: true,
 			data: user_find_data
 		}
@@ -59,7 +57,7 @@ class User {
 			attributes: ['id', 'openid', 'nickname', 'avatar', 'gender', 'city', 'province', 'country', 'created_at', 'updated_at']
 		})
 
-		return ctx.response.body = {
+		ctx.body = {
 			success: true,
 			data: all_users_data
 		}

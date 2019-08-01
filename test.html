@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<script src="http://res2.wx.qq.com/open/js/jweixin-1.4.0.js"></script>
+	<title>Document</title>
+</head>
+
+<body>
+	<div onclick="Login()">
+		登录
+	</div>
+	<div onclick="getToken()">
+		获取 token
+	</div>
+	<div onclick="refreshToken()">
+		重新获取 token
+	</div>
+	<div onclick="validateAccessToken()">
+		校验 token
+	</div>
+	<div onclick="getAccessTokenForTicket()">
+		获取 ticket 所需的 access_token
+	</div>
+	<div onclick="getTicket()">
+		获取 ticket
+	</div>
+	<div onclick="getSignature()">
+		获取 signature
+	</div>
+	<div onclick="getRole()">
+		获取 role
+	</div>
+	<script>
+		function getQueryString(name) {
+			const reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i")
+			const r = window.location.search.substr(1).match(reg)
+			if (r != null) return unescape(r[2])
+			return null
+		}
+
+		function Login() {
+			window.location.href = 'http://localhost:3000/api/wechat/goLogin'
+		}
+
+		async function getToken() {
+			const response = await window.fetch('http://localhost:3000/api/wechat/getWxCallback?code=' + getQueryString('code'), {
+				headers: {
+					'Accept': 'application/x-www-form-urlencoded',
+					'Content-Type': 'application/json'
+				}
+			})
+			const result = JSON.parse(await response.text())
+			console.log('getToken: ', result.data)
+
+			window.config = result.data
+		}
+
+		async function refreshToken() {
+			const response = await window.fetch('http://localhost:3000/api/wechat/refreshAccessToken?refresh_token=' + window.config.refresh_token, {
+				headers: {
+					'Accept': 'application/x-www-form-urlencoded',
+					'Content-Type': 'application/json'
+				}
+			})
+			const result = JSON.parse(await response.text())
+			console.log('refresh_token: ', result.data)
+			window.config = result.data
+		}
+
+		async function validateAccessToken() {
+			const response = await window.fetch(`http://localhost:3000/api/wechat/validateAccessToken?access_token=${window.config.access_token}&openid=${window.config.openid}`, {
+					headers: {
+						'Accept': 'application/x-www-form-urlencoded',
+						'Content-Type': 'application/json'
+					}
+				})
+			const result = JSON.parse(await response.text())
+			console.log('validateAccessToken: ', result.data)
+		}
+
+		async function getAccessTokenForTicket() {
+			const response = await window.fetch('http://localhost:3000/api/wechat/getAccessTokenForTicket', {
+					headers: {
+						'Accept': 'application/x-www-form-urlencoded',
+						'Content-Type': 'application/json'
+					}
+				})
+			const result = JSON.parse(await response.text())
+			console.log('getTicket: ', result.data)
+
+			window.ticket_config = result.data
+		}
+
+		async function getTicket() {
+			const response = await window.fetch('http://localhost:3000/api/wechat/getTicket?access_token=' + window.ticket_config.access_token, {
+					headers: {
+						'Accept': 'application/x-www-form-urlencoded',
+						'Content-Type': 'application/json'
+					}
+				})
+			const result = JSON.parse(await response.text())
+			console.log('getTicket: ', result.data)
+			window.ticket_config = result.data
+		}
+
+		async function getSignature() {
+			const response = await window.fetch(`http://localhost:3000/api/wechat/getSignature?ticket=${window.ticket_config.ticket}&url=${encodeURIComponent(location.href.split('#')[0])}`, {
+					headers: {
+						'Accept': 'application/x-www-form-urlencoded',
+						'Content-Type': 'application/json'
+					}
+				})
+			const result = JSON.parse(await response.text())
+			console.log('getSignature: ', result.data)
+			window.signature_config = result.data
+		}
+
+		function getRole() {
+			wx.config({
+				debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+				appId: window.signature_config.appid, // 必填，公众号的唯一标识
+				timestamp: window.signature_config.timestamp, // 必填，生成签名的时间戳
+				nonceStr: window.signature_config.noncestr, // 必填，生成签名的随机串
+				signature: window.signature_config.signature, // 必填，签名，见附录1
+				jsApiList: [
+					'updateAppMessageShareData',
+					'updateTimelineShareData'
+				]
+			})
+		}
+	</script>
+</body>
+
+</html>

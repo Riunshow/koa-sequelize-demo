@@ -4,8 +4,8 @@ const MYSQL_CONFIG = {
 	database: 'h5_operation',
 	dialect: 'mysql',
 	user: 'root',
-	password: '12345678',
-	// password: '123456',
+	// password: '12345678',
+	password: '123456',
 	pool: {
 		max: 5,
 		min: 0,

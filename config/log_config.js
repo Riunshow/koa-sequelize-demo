@@ -22,10 +22,9 @@ log4js.configure({
   categories: {
     default: { appenders: [ 'out' ], level: 'info' },
     access: { appenders: [ 'access' ], level: 'info' },
-    application: { appenders: [ 'application' ], level: 'warn'}
+    application: { appenders: [ 'out', 'application' ], level: 'warn'}
   }
 })
 
 exports.accessLogger = () => log4js.koaLogger(log4js.getLogger('access'))
 exports.logger = log4js.getLogger('application')
-exports.log = log4js.getLogger()
